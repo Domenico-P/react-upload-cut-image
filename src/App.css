@@ -26,7 +26,11 @@
   padding: 20px;
 }
 
-.Img{
+.DropArea {
+  color: black;
+}
+
+.Img {
         position: absolute;
         top: 50%;
         left: 50%;

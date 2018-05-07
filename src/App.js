@@ -1,20 +1,31 @@
 import React, { Component } from 'react';
 //import logo from './logo.svg';
 import './App.css';
+import Dropzone from 'react-dropzone'
 
 class InputComponent extends Component {
 
-  state = {selectedFile: null}
+  constructor(props) {
+    super(props);
+    this.state = {selectedFile: null};
+  }
 
   fileChangedHandler = (event) => {
     this.setState({selectedFile: URL.createObjectURL(event.target.files[0])})
+    console.log('URL: ', URL.createObjectURL(event.target.files[0]));
+  }
+
+  onDrop(files) {
+    const url = files[0].preview;
+    this.setState({selectedFile: url});
+    console.log('URL: ', files[0].preview);
   }
 
   render() {
     return (
       <div>
         <input className="Input" type="file" onChange={this.fileChangedHandler}></input>
-        <img className="Img" src ={this.state.selectedFile}></img>
+        <Dropzone onDrop={this.onDrop.bind(this)} className="DropArea"><img className="Img" src ={this.state.selectedFile}></img></Dropzone>
       </div>
     );
   }
@@ -29,7 +40,7 @@ class App extends Component {
             <h1 className="App-title">Upload and resize images.</h1>
           </header>
         </div>
-          <InputComponent/>
+        <InputComponent/>
       </div>
     );
   }
