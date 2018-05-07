@@ -3,9 +3,23 @@ import React, { Component } from 'react';
 import './App.css';
 
 class InputComponent extends Component {
+
+  state = {selectedFile: null}
+
+  fileChangedHandler = (event) => {
+    this.setState({selectedFile: event.target.files[0]})
+  }
+
+  uploadHandler = () => {
+    console.log(this.state.selectedFile)
+  }
+
   render() {
     return (
-      <input className="Input" type="file"></input>
+      <div>
+        <input className="Input" type="file" onChange={this.fileChangedHandler}></input>
+        <button onClick={this.uploadHandler}>Upload!</button>
+      </div>
     );
   }
 }
@@ -28,7 +42,7 @@ class App extends Component {
           </header>
         </div>
           <InputComponent/>
-          <ImgAreaComponent headerValue="ciao"/>
+          <ImgAreaComponent headerValue="carica immagine..."/>
       </div>
     );
   }
