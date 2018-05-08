@@ -13,19 +13,21 @@ class InputComponent extends Component {
   fileChangedHandler = (event) => {
     this.setState({selectedFile: URL.createObjectURL(event.target.files[0])})
     console.log('URL: ', URL.createObjectURL(event.target.files[0]));
+    console.log('FILE: ', event);
   }
 
-  onDrop(files) {
-    const url = files[0].preview;
+  dropChangeHandler = (files) => {
+    let url = files[0].preview;
     this.setState({selectedFile: url});
     console.log('URL: ', files[0].preview);
+    console.log('FILE: ', files);
   }
 
   render() {
     return (
       <div>
         <input className="Input" type="file" onChange={this.fileChangedHandler}></input>
-        <Dropzone onDrop={this.onDrop.bind(this)} className="DropArea"><img className="Img" src ={this.state.selectedFile}></img></Dropzone>
+        <Dropzone onDrop={this.dropChangeHandler} className="DropArea"><img className="Img" src ={this.state.selectedFile}></img></Dropzone>
       </div>
     );
   }
