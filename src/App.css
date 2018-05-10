@@ -26,23 +26,28 @@
   padding: 20px;
 }
 
+.canvas {
+  display: inline-block;
+}
+
+.Crop {
+  display: inline-block;
+}
+
 .DropArea {
   color: black;
+  display: inline-block;
 }
 
 .ReactCrop__image {
-  height: 300px;
-  width: 300px;
+  height: 400px;
+  width: 400px;
+  background-color: white;
 }
 
 .Img {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-left: -250px;
-        margin-top: -170px;
-        height: 500px;
-        width: 500px;
+        height: 400px;
+        width: 400px;
         background-size: contain;
         border: 5px dotted #bbb;
         background-repeat: no-repeat;

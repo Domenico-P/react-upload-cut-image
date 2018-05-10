@@ -1,55 +1,109 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 //import logo from './logo.svg';
-import './App.css';
-import Dropzone from 'react-dropzone';
-import ReactCrop from 'react-image-crop';
+import "./App.css";
+import Dropzone from "react-dropzone";
+import ReactCrop from "react-image-crop";
+
+import "react-image-crop/dist/ReactCrop.css";
 
 class InputComponent extends Component {
-
   constructor(props) {
     super(props);
-    this.state = {selectedFile: null};
+    this.state = {
+      pixelCrop: null,
+      crop: null,
+      selectedFile: null
+    };
   }
 
+  handleFileChange = event => {
+    this.setState({ selectedFile: URL.createObjectURL(event.target.files[0]) });
+    //console.log('URL: ', URL.createObjectURL(event.target.files[0]));
+    //console.log('FILE: ', event);
+  };
 
-  fileChangedHandler = (event) => {
-    this.setState({selectedFile: URL.createObjectURL(event.target.files[0])})
-    console.log('URL: ', URL.createObjectURL(event.target.files[0]));
-    console.log('FILE: ', event);
-  }
-
-  dropChangeHandler = (files) => {
+  handleDrop = files => {
     let url = files[0].preview;
-    this.setState({selectedFile: url});
-    console.log('URL: ', files[0].preview);
-    console.log('FILE: ', files);
-  }
+    this.setState({ selectedFile: url });
+    //console.log('URL: ', files[0].preview);
+    //console.log('FILE: ', files);
+  };
 
-  cropChangeHandler = (crop) => {
-  this.setState({ crop });
-  console.log('CROP: ', crop);
-  }
+  handleCropChange = (crop, pixelCrop) => {
+    this.setState({ crop, pixelCrop }, this.updateCroppedTile);
+    //console.log('CROP: ', crop);
+  };
 
-  crop: {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
-  }
+  updateCroppedTile = () => {
+    const { pixelCrop, selectedFile } = this.state;
+    const { canvas } = this;
+
+    if (selectedFile == null || canvas == null || pixelCrop == null) {
+      return;
+    }
+
+    canvas.width = pixelCrop.width;
+    canvas.height = pixelCrop.height;
+
+    const context = canvas.getContext("2d");
+    const image = new Image();
+
+    image.src = selectedFile;
+    var dataURL = canvas.toDataURL("image/png");
+
+    
+
+    console.log('DatUrl: ',dataURL);
+
+    image.onload = () => {
+      //console.log(pixelCrop);
+      //console.log(image.width, image.height);
+
+      context.clearRect(0, 0, pixelCrop.width, pixelCrop.height);
+      context.drawImage(
+        image,
+        pixelCrop.x,
+        pixelCrop.y,
+        pixelCrop.width,
+        pixelCrop.height,
+        0,
+        0,
+        pixelCrop.width,
+        pixelCrop.height
+      );
+    };
+  };
 
   render() {
     return (
       <div>
-        <input className="Input" type="file" onChange={this.fileChangedHandler}></input>
-        <Dropzone className="DropArea" onDrop={this.dropChangeHandler}><img className="Img" draggable="false" src ={this.state.selectedFile}></img></Dropzone>
-        <ReactCrop className="Crop" src={this.state.selectedFile} onChange={this.cropChangeHandler} crop={this.state.crop}/>
-        <button>Ritaglia</button>
-        <button>Annulla</button>
+        <input className="Input" type="file" onChange={this.handleFileChange} />
+        <Dropzone className="DropArea" onDrop={this.handleDrop}>
+          <img
+            id="source"
+            className="Img"
+            draggable="false"
+            src={this.state.selectedFile}
+          />
+        </Dropzone>
+        <ReactCrop
+          className="Crop"
+          src={this.state.selectedFile}
+          onChange={this.handleCropChange}
+          crop={this.state.crop}
+        />
+        <div>
+          <canvas
+            style={{ outline: `2px solid red` }}
+            ref={element => {
+              this.canvas = element;
+            }}
+          />
+        </div>
       </div>
     );
   }
 }
-
 
 class App extends Component {
   render() {
@@ -60,7 +114,7 @@ class App extends Component {
             <h1 className="App-title">Upload and resize images.</h1>
           </header>
         </div>
-        <InputComponent/>
+        <InputComponent />
       </div>
     );
   }
