@@ -1,2 +1,2 @@
 # elm-upload-and-cut-image
-![Image](uploadImg.png?raw=true "Title")
+![Image](upload-Img.png?raw=true "Title")
